@@ -1,0 +1,122 @@
+.section {
+    padding: 4rem 2rem;
+    background-color: #fafafa;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 640px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .card {
+    background: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+  
+  .card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .imageWrapper {
+    position: relative;
+    aspect-ratio: 1;
+  }
+  
+  .productInfo {
+    padding: 1rem;
+  }
+  
+  .productName {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .productDescription {
+    color: #666;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .price {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .oldPrice {
+    text-decoration: line-through;
+    color: #999;
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .tag {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+  }
+  
+  .new {
+    background-color: #10b981;
+  }
+  
+  .sale {
+    background-color: #ef4444;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid #eee;
+  }
+  
+  .actionButton {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #666;
+    font-size: 0.875rem;
+  }
+  .actionButton:hover{
+    color: #000000;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    transition: background-color 0.2s;
+  
+  }
