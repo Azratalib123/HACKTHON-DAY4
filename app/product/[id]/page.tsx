@@ -1,11 +1,7 @@
 import { client } from "@/sanity/lib/client";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import ProductClient from "@/components/ProductClient";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import Features from "@/components/features";
-import { Metadata } from "next";
-
+import ProductClient from "@/components/ProductClient"; // Import client-side wrapper
 
 interface Product {
   _id: string;
@@ -20,7 +16,7 @@ interface Product {
   sizes?: string[];
 }
 
-// ✅ Fetch product data from Sanity
+// Fetch product from Sanity by its id
 const fetchProduct = async (id: string): Promise<Product | null> => {
   const query = `*[_type == "product" && _id == $id][0]{
     _id,
@@ -38,71 +34,45 @@ const fetchProduct = async (id: string): Promise<Product | null> => {
   return product || null;
 };
 
-// ✅ Fix: Correct Type for generateMetadata function
-export async function generateMetadata({
-  params,
-}: { params: { id: string } }): Promise<Metadata> {
-  const product = await fetchProduct(params.id);
+// ProductPage component
+const ProductPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+  // Await params here to resolve the Promise
+  const { id } = await params;
 
-  if (!product) {
-    return {
-      title: "Product Not Found",
-      description: "The requested product does not exist.",
-    };
-  }
-
-  return {
-    title: product.title,
-    description: product.description.slice(0, 150),
-  };
-}
-
-// ✅ Fix: Correct Type for ProductPage function
-const ProductPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+  // Fetch the product based on the slug
   const product = await fetchProduct(id);
 
   if (!product) {
-    notFound(); // Redirect to 404 page if the product is not found
+    notFound();
   }
 
   return (
-    <div className="container mx-auto px-6 py-12 bg-slate-200">
-      <Navbar />
-      <nav className="text-gray-600 mb-6 text-sm">
-        <span className="text-gray-900 font-semibold text-xl">{product.title}</span>
+    <div className="container mx-auto px-6 py-12 bg-slate-200 font-sans">
+      <nav className="text-black mb-6 text-sm">
+        <Link href="/" className="hover:underline text-xl text-black">Home</Link> &gt;
+        <Link href="/shop" className="hover:underline text-xl text-black">Shop</Link> &gt;
+        <span className="text-black font-semibold text-xl">{product.title}</span>
       </nav>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex justify-center">
-          <img
-            src={product.imageUrl}
-            alt={product.title}
-            className="rounded-lg shadow-lg w-full max-w-md object-cover"
-          />
+          <img src={product.imageUrl} alt={product.title} className="rounded-lg shadow-lg w-full max-w-md object-cover" />
         </div>
 
-        <div className="space-y-6">
-          <h1 className="text-4xl font-extrabold text-gray-900">{product.title}</h1>
-          <p className="text-lg text-primary font-semibold">${product.price.toFixed(2)}</p>
-
+        <div className="space-y-6 text-black">
+          <h1 className="text-4xl font-extrabold">{product.title}</h1>
+          <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
           {product.discountPercentage && (
-            <p className="text-sm text-red-500 font-bold">
-              -{product.discountPercentage}% Off
-            </p>
+            <p className="text-sm text-red-500 font-bold">-{product.discountPercentage}% Off</p>
           )}
-          <p>{product.description}</p>
+          <p className="text-black font-bold italic">{product.description}</p>
 
           {product.colors && product.colors.length > 0 && (
             <div className="mt-4">
-              <h3 className="text-lg font-semibold text-gray-900">Available Colors:</h3>
+              <h3 className="text-lg font-semibold">Available Colors:</h3>
               <div className="flex gap-3 mt-2">
                 {product.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="w-8 h-8 rounded-full border border-gray-300"
-                    style={{ backgroundColor: color }}
-                  />
+                  <div key={index} className="w-8 h-8 rounded-full border border-gray-300" style={{ backgroundColor: color }} />
                 ))}
               </div>
             </div>
@@ -110,13 +80,10 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
 
           {product.sizes && product.sizes.length > 0 && (
             <div className="mt-4">
-              <h3 className="text-lg font-semibold text-gray-900">Sizes:</h3>
+              <h3 className="text-lg font-semibold">Sizes:</h3>
               <div className="flex gap-2 mt-2">
                 {product.sizes.map((size, index) => (
-                  <span
-                    key={index}
-                    className="border border-gray-300 px-3 py-1 rounded-lg text-sm font-semibold"
-                  >
+                  <span key={index} className="border border-gray-300 px-3 py-1 rounded-lg text-sm font-semibold">
                     {size}
                   </span>
                 ))}
@@ -127,15 +94,20 @@ const ProductPage = async ({ params }: { params: { id: string } }) => {
           <ProductClient product={product} />
         </div>
       </div>
-
-      <br />
-      <br />
-      <br />
-      <br />
-      <Features />
-      <Footer />
     </div>
   );
 };
 
 export default ProductPage;
+
+// ====================
+
+export interface PageProps {
+  params?: Promise<{ id: string }>
+  searchParams?: Promise<any>
+}
+
+export interface LayoutProps {
+  children?: React.ReactNode
+  params?: Promise<{ id: string }>
+}
